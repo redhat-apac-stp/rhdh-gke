@@ -29,6 +29,8 @@ upstream:
     create: true
     annotations:
       iam.gke.io/gcp-service-account: ${GSA}
+  postgresql:
+    enabled: false    
   ingress:
     enabled: true
     annotations:
