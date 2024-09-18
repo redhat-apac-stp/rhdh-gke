@@ -32,26 +32,69 @@ upstream:
   postgresql:
     enabled: false    
   ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: gce
-      networking.gke.io/managed-certificates: "rhdh-cert"
-    # tls:
-    #   enabled: true
-    #   secretName: tls-certs-secret  
+    enabled: false
   backstage:      
     image:
       registry: quay.io #optional
       repository: rhdh/rhdh-hub-rhel9 #optional
       tag: "1.3" #optional
     appConfig:
-      backend:
+        https: 
+          certificate:
+            key: ${BACKSTAGE_SSL_KEY} # key in pem format 
+            cert: ${BACKSTAGE_SSL_CERT} # cert in pem format 
         database:
-          connection:  # configure Backstage DB connection parameters
+          client: pg
+          ensureExists: true
+          pluginDivisionMode: 'schema'
+          knexConfig:
+            searchPath: ['knex', 'public']
+          connection:
             host: '127.0.0.1'
             port: '5432'
-            user: ${GSA}
-            password: 'test' #dummy Value
+            user: ${DB_USER}
+            password: ${DB_PASSWORD}
+          # prefix: devhub_plugin_
+          plugin:
+            permission:
+              connection: 
+                database: devhub_plugin_permission
+            kubernetes:
+              connection: 
+                database: devhub_plugin_kubernetes                     
+            scalprum:
+              connection: 
+                database: devhub_plugin_scalprum 
+            licensed-users-info:
+              connection: 
+                database: devhub_plugin_licensed-users-info          
+            techdocs:
+              connection: 
+                database: devhub_plugin_techdocs        
+            events:
+              connection: 
+                database: devhub_plugin_events          
+            search:
+              connection: 
+                database: devhub_plugin_search
+            scaffolder:
+              connection: 
+                database: devhub_plugin_scaffolder
+            proxy:
+              connection: 
+                database: devhub_plugin_proxy
+            auth:
+              connection: 
+                database: devhub_plugin_auth
+            catalog:
+              connection:
+                database: devhub_plugin_catalog
+            app:
+              connection: 
+                database: devhub_plugin_auth
+            dynamic-plugins-info: 
+              connection: 
+                database: devhub_plugin_dynamic-plugins-info       
     podSecurityContext:
       # you can assign any random value as fsGroup
       fsGroup: 2000    
