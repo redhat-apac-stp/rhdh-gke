@@ -128,3 +128,9 @@ upstream:
           requests:
             memory: "2Gi"
             cpu:    "1"          
+    livenessProbe:
+      httpGet:
+        scheme: HTTPS 
+    readinessProbe:
+      httpGet:
+        scheme: HTTPS            
