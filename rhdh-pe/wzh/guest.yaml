@@ -1,0 +1,24 @@
+    auth:
+      environment: development
+      session:
+        secret: \${SESSION_SECRET}
+      providers:
+        microsoft:
+          development:
+            clientId: \${AZURE_CLIENT_ID}
+            clientSecret: \${AZURE_CLIENT_SECRET}
+            tenantId: \${AZURE_TENANT_ID}
+            domainHint: \${AZURE_TENANT_ID}
+            additionalScopes:
+              - Mail.Send
+            # signIn:
+            #   resolvers:
+            #     # typically you would pick one of these
+            #     - resolver: idMatchingUserEntityAnnotation
+            #     - resolver: emailMatchingUserEntityProfileEmail
+            #     - resolver: emailLocalPartMatchingUserEntityName
+            #     - resolver: emailMatchingUserEntityAnnotation  
+        guest:
+            userEntityRef: user:default/guest
+            development: {}
+            dangerouslyAllowOutsideDevelopment: true
